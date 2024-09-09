@@ -1,0 +1,17 @@
+# byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# virtual environment
+venv/
+
+# PyCharm settings
+.idea/
+.idea/*
+
+# logs
+*.log
+
+# env files
+.env
