@@ -1,0 +1,16 @@
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs         # exclude all files in .eggs directories
+  | \.git          # exclude all files in .git directories
+  | \.tox          # exclude all files in .tox directories
+  | venv           # exclude all files in .venv directories
+  | _build         # exclude all files in _build directories
+  | build          # exclude all files in build directories
+  | dist           # exclude all files in dist directories
+  | \.txt          # exclude all txt files
+)/
+'''

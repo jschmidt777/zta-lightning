@@ -15,3 +15,6 @@ venv/
 
 # env files
 .env
+
+# pre-commit
+.pre-commit/

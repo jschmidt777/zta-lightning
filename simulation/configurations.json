@@ -1,0 +1,158 @@
+{
+    "Router1": {
+        "hostname": "Router1",
+        "interfaces": {
+            "Gig0/0": {
+                "ip_address": "192.168.1.1",
+                "status": "up",
+                "connected_device": "Switch1",
+                "connected_interface": "Gig0/0"
+            },
+            "Gig0/1": {
+                "ip_address": "10.0.0.1",
+                "status": "up",
+                "connected_device": "Firewall1",
+                "connected_interface": "Gig0/0"
+            },
+            "Gig0/2": {
+                "ip_address": "192.168.1.254",
+                "status": "up",
+                "connected_device": "ApplianceServer",
+                "connected_interface": "eth0"
+            }
+        },
+        "routing_protocol": "OSPF",
+        "ACL": {
+            "name": "BLOCK_SSH",
+            "rules": ["deny tcp any any eq 22"]
+        },
+        "logging": {
+            "enabled": true,
+            "log_level": "INFO",
+            "log_server": "192.168.1.254",
+            "log_events": ["ACCESS_DENIED", "CONFIG_CHANGE", "INTERFACE_DOWN"],
+            "retention_period": 30
+        }
+    },
+    "Switch1": {
+        "hostname": "Switch1",
+        "interfaces": {
+            "Gig0/0": {
+                "status": "up",
+                "connected_device": "Router1",
+                "connected_interface": "Gig0/0"
+            },
+            "Gig0/1": {
+                "status": "up",
+                "connected_device": "Host1"
+            },
+            "Gig0/2": {
+                "status": "up",
+                "connected_device": "Host2"
+            },
+            "Gig0/3": {
+                "status": "up",
+                "connected_device": "FileServer"
+            },
+            "Gig0/4": {
+                "status": "up"
+            }
+        },
+        "VLANs": {
+            "10": "Marketing",
+            "20": "Engineering"
+        },
+        "logging": {
+            "enabled": true,
+            "log_level": "INFO",
+            "log_server": "192.168.1.254",
+            "log_events": ["ACCESS_DENIED", "CONFIG_CHANGE"],
+            "retention_period": 15
+        }
+    },
+    "Firewall1": {
+        "hostname": "Firewall1",
+        "interfaces": {
+            "Gig0/0": {
+                "ip_address": "10.0.0.2",
+                "status": "up",
+                "connected_device": "Router1",
+                "connected_interface": "Gig0/1"
+            }
+        },
+        "policies": {
+            "allow_ssh": {
+                "source": "192.168.1.0/24",
+                "destination": "any",
+                "port": "22",
+                "action": "allow"
+            },
+            "block_http": {
+                "source": "any",
+                "destination": "any",
+                "port": "80",
+                "action": "block"
+            }
+        },
+        "logging": {
+            "enabled": false,
+            "log_level": "N/A",
+            "log_server": "N/A",
+            "log_events": ["ACCESS_DENIED", "CONFIG_CHANGE"],
+            "retention_period": 0
+        }
+    },
+    "Host1": {
+        "hostname": "Host1",
+        "ip_address": "192.168.1.101",
+        "connected_to": {
+            "device": "Switch1",
+            "interface": "Gig0/1"
+        },
+        "operating_system": "Windows 10",
+        "status": "up"
+    },
+    "Host2": {
+        "hostname": "Host2",
+        "ip_address": "192.168.1.102",
+        "connected_to": {
+            "device": "Switch1",
+            "interface": "Gig0/2"
+        },
+        "operating_system": "Ubuntu 20.04",
+        "status": "up"
+    },
+    "FileServer": {
+        "hostname": "FileServer",
+        "ip_address": "192.168.1.103",
+        "connected_to": {
+            "device": "Switch1",
+            "interface": "Gig0/3"
+        },
+        "operating_system": "Windows Server 2019",
+        "status": "up",
+        "services": ["File Sharing", "FTP"]
+    },
+    "AdminMachine": {
+        "hostname": "AdminMachine",
+        "ip_address": "192.168.1.104",
+        "connected_to": {
+            "device": "Switch1",
+            "interface": "Gig0/4"
+        },
+        "operating_system": "Windows 10",
+        "status": "up",
+        "roles": ["admin"]
+    },
+    "ApplianceServer": {
+        "hostname": "ApplianceServer",
+        "ip_address": "192.168.1.254",
+        "connected_to": {
+            "device": "Router1",
+            "interface": "Gig0/2"
+        },
+        "operating_system": "CentOS 7",
+        "status": "up",
+        "services": ["NMS", "AAA"]
+    }
+}
