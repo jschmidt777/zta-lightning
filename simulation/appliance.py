@@ -59,15 +59,6 @@ def authorize(current_user):
     return jsonify({"status": "Unauthorized"}), 403
 
 
-@app.route("/account", methods=["POST"])
-@token_verification
-def account(current_user):
-    data = request.json
-    action = data.get("action")
-    current_user["usage"].append(action)
-    return jsonify({"status": "Logged"}), 200
-
-
 @app.route("/device/<hostname>/config", methods=["GET"])
 @token_verification
 def get_device_configuration(current_user, hostname):
