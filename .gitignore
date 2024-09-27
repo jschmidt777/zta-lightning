@@ -18,3 +18,8 @@ venv/
 
 # pre-commit
 .pre-commit/
+
+# certs
+*.crt
+*.csr
+*.key
