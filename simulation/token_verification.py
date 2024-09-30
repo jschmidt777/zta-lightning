@@ -20,8 +20,15 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default_secret_key")
 
 
 def token_verification(f):
+    """Verify that the JWT is valid from the request.
+
+    :param f: the called endpoint
+    :return: A JSON response
+    """
+
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def decorator(*args, **kwargs):
+        """Decorate the function."""
         token = None
 
         if "Authorization" in request.headers:
@@ -42,4 +49,4 @@ def token_verification(f):
 
         return f(current_user, *args, **kwargs)
 
-    return decorated
+    return decorator

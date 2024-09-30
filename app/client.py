@@ -3,7 +3,6 @@
 import getpass
 import os
 from typing import Any
-from urllib.parse import urlparse
 
 import urllib3
 from dotenv import load_dotenv
@@ -84,7 +83,10 @@ class APIClient:
             )
 
     def get_all_device_data(self) -> JSON:
-        """Get all device configurations for compliance checks."""
+        """Get all device configurations for compliance checks.
+
+        :return: JSON of all device configuration data
+        """
         if self._token:
             protected_url = f"{self._base_url}/device/configs"
             headers = {"Authorization": f"Bearer {self._token}"}

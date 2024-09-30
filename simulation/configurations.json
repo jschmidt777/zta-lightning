@@ -31,9 +31,8 @@
             },
             "logging": {
                 "enabled": true,
-                "log_level": "INFO",
                 "log_server": "192.168.1.254",
-                "log_events": ["ACCESS_DENIED", "CONFIG_CHANGE", "INTERFACE_DOWN"],
+                "log_events": ["INFO", "WARNING", "ERROR", "FATAL"],
                 "retention_period": 30
             }
         }
@@ -71,12 +70,8 @@
             },
             "logging": {
                 "enabled": true,
-                "log_level": "INFO",
                 "log_server": "192.168.1.254",
-                "log_events": [
-                    "ACCESS_DENIED",
-                    "CONFIG_CHANGE"
-                ],
+                "log_events": ["INFO", "WARNING", "ERROR", "FATAL"],
                 "retention_period": 15
             }
         }
@@ -130,7 +125,15 @@
                 "interface": "Gig0/1"
             },
             "operating_system": "Windows 10",
-            "status": "up"
+            "status": "up",
+            "logging": {
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [
+                    "INFO",
+                    "WARNING"
+                ]
+            }
         }
     },
     "Host2": {
@@ -143,7 +146,15 @@
                 "interface": "Gig0/2"
             },
             "operating_system": "Ubuntu 20.04",
-            "status": "up"
+            "status": "up",
+            "logging": {
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [
+                    "INFO",
+                    "WARNING"
+                ]
+            }
         }
     },
     "FileServer": {
@@ -160,7 +171,17 @@
             "services": [
                 "File Sharing",
                 "FTP"
-            ]
+            ],
+            "logging": {
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [
+                    "INFO",
+                    "WARNING",
+                    "ERROR",
+                    "FATAL"
+                ]
+            }
         }
     },
     "AdminMachine": {
@@ -176,7 +197,15 @@
             "status": "up",
             "roles": [
                 "admin"
-            ]
+            ],
+            "logging": {
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [
+                    "INFO",
+                    "WARNING"
+                ]
+            }
         }
     },
     "ApplianceServer": {
@@ -193,7 +222,15 @@
             "services": [
                 "NMS",
                 "AAA"
-            ]
+            ],
+            "logging": {
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [
+                    "INFO",
+                    "WARNING"
+                ]
+            }
         }
     }
 }

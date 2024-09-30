@@ -40,5 +40,6 @@ class CLI:
         HTTPS and JWT must be enabled on your appliance for this tool to authenticate.
         The tool will examine devices on the network based on data provided by the appliance and provide an excel report
         of the compliance results.
+        After the tool has completed it's run, it will output the report in the same directory that the tool is ran in.
         """
         print(instructions)

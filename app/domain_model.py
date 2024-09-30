@@ -1,7 +1,7 @@
 """Domain model for device."""
 
 import ipaddress
-from typing import Any, Literal
+from typing import Any
 
 from app.exceptions import (
     InvalidDeviceTypeError,
@@ -12,10 +12,10 @@ from app.exceptions import (
 
 JSON = dict[str, Any] | None
 
-DEVICE_TYPES = Literal["host", "server", "switch", "router", "firewall"]
+DEVICE_TYPES = ["host", "server", "switch", "router", "firewall"]
 
 
-class NetworkDevice:
+class Device:
     """A device on the network."""
 
     def __init__(self, device: JSON):
@@ -61,3 +61,7 @@ class NetworkDevice:
     def configuration(self) -> dict:
         """Return the configuration."""
         return self._configuration
+
+    def __str__(self):
+        """Return the string representation of the Device."""
+        return f"Device(Hostname: {self.hostname}, IP Address: {self.ip_address}, Type: {self.device_type})"
