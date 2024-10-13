@@ -34,6 +34,11 @@
                 "log_server": "192.168.1.254",
                 "log_events": ["INFO", "WARNING", "ERROR", "FATAL"],
                 "retention_period": 30
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "acl": {"allow":["joe"]}
             }
         }
     },
@@ -73,6 +78,11 @@
                 "log_server": "192.168.1.254",
                 "log_events": ["INFO", "WARNING", "ERROR", "FATAL"],
                 "retention_period": 15
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "acl": {"allow":["joe"]}
             }
         }
     },
@@ -108,10 +118,13 @@
                 "log_level": "N/A",
                 "log_server": "N/A",
                 "log_events": [
-                    "ACCESS_DENIED",
-                    "CONFIG_CHANGE"
                 ],
                 "retention_period": 0
+            },
+            "auth":{
+                "enabled": false,
+                "aaa_server": "",
+                "acl": {"allow":["joe"]}
             }
         }
     },
@@ -133,6 +146,11 @@
                     "INFO",
                     "WARNING"
                 ]
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "assigned_user": "alice"
             }
         }
     },
@@ -154,6 +172,11 @@
                     "INFO",
                     "WARNING"
                 ]
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "assigned_user": "bob"
             }
         }
     },
@@ -181,6 +204,11 @@
                     "ERROR",
                     "FATAL"
                 ]
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "acl": {"allow": ["alice", "joe"]}
             }
         }
     },
@@ -205,6 +233,11 @@
                     "INFO",
                     "WARNING"
                 ]
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "assigned_user": "joe"
             }
         }
     },
@@ -230,6 +263,11 @@
                     "INFO",
                     "WARNING"
                 ]
+            },
+            "auth":{
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
+                "acl": {"allow": ["joe"]}
             }
         }
     }

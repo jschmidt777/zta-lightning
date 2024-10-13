@@ -67,7 +67,7 @@ class APIClient:
                 response = requests.get(protected_url, headers=headers, verify=VERIFY_SSL)
                 response.raise_for_status()
                 config = response.json().get("configuration")
-                print(f"Successfully accessed {device} configuration: {config}")
+                print(f"Successfully accessed {device} configuration.")
                 return config
             except requests.exceptions.HTTPError as err:
                 print(f"Failed to access test connection config: {device} Error was: {err}")
@@ -98,6 +98,28 @@ class APIClient:
                 return device_configs
             except requests.exceptions.HTTPError as err:
                 print(f"Failed to access device configs. Error was: {err}")
+                try:
+                    print("Response:", response.json())
+                except ValueError:
+                    print("No JSON response received.")
+                return None
+
+    def get_all_user_info(self) -> JSON:
+        """Get all user info. for compliance checks.
+
+        :return: JSON of all user info. data
+        """
+        if self._token:
+            protected_url = f"{self._base_url}/users/data"
+            headers = {"Authorization": f"Bearer {self._token}"}
+            try:
+                response = requests.get(protected_url, headers=headers, verify=VERIFY_SSL)
+                response.raise_for_status()
+                device_configs = response.json()
+                print(f"Successfully accessed user info. for compliance checking.")
+                return device_configs
+            except requests.exceptions.HTTPError as err:
+                print(f"Failed to access user info. Error was: {err}")
                 try:
                     print("Response:", response.json())
                 except ValueError:

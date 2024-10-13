@@ -1,32 +1,57 @@
 """Exceptions."""
 
 
-class InvalidNetworkDeviceValueError(Exception):
+class InvalidDeviceValueError(Exception):
     """Invalid network device value provided."""
 
     def __init__(self, invalid_value):
-        super().__init__(f"Invalid value: {invalid_value}.")
+        super().__init__(f"Invalid device value: {invalid_value}.")
 
 
-class InvalidDeviceTypeError(InvalidNetworkDeviceValueError):
+class InvalidDeviceTypeError(InvalidDeviceValueError):
     """Invalid device type."""
 
     pass
 
 
-class InvalidHostnameError(InvalidNetworkDeviceValueError):
+class InvalidHostnameError(InvalidDeviceValueError):
     """Invlaid hostname."""
 
     pass
 
 
-class InvalidIpAddressError(InvalidNetworkDeviceValueError):
-    """Invlaid ip address."""
+class InvalidIpAddressError(InvalidDeviceValueError):
+    """Invalid ip address."""
 
     pass
 
 
-class InvalidConfigurationError(InvalidNetworkDeviceValueError):
+class InvalidConfigurationError(InvalidDeviceValueError):
     """Invalid configuration."""
+
+    pass
+
+
+class InvalidUserValueError(Exception):
+    """Invalid user info. value provided."""
+
+    def __init__(self, invalid_value):
+        super().__init__(f"Invalid user info. value: {invalid_value}.")
+
+
+class InvalidUsernameError(InvalidUserValueError):
+    """Invalid username."""
+
+    pass
+
+
+class InvalidUserDevicesError(InvalidUserValueError):
+    """Invalid user devices."""
+
+    pass
+
+
+class InvalidUserRolesError(InvalidUserValueError):
+    """Invalid user roles."""
 
     pass

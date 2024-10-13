@@ -33,9 +33,9 @@ if os.path.exists(DEVICES_FILE):
 
 @app.route("/auth", methods=["POST"])
 def authenticate():
-    """
+    """Authenticate the user.
 
-    :return:
+    :return: a JSON response
     """
     data = request.json
     # password handled this way for simulation simplicity
@@ -56,10 +56,10 @@ def authenticate():
 @app.route("/authorize", methods=["POST"])
 @token_verification
 def authorize(current_user):
-    """
+    """Authorize the user.
 
-    :param current_user:
-    :return:
+    :param current_user: the user
+    :return: a JSON response
     """
     data = request.json
     resource = data.get("resource")
@@ -72,11 +72,11 @@ def authorize(current_user):
 @app.route("/device/<hostname>/config", methods=["GET"])
 @token_verification
 def get_device_configuration(current_user, hostname):
-    """
+    """Get the device configuration.
 
-    :param current_user:
-    :param hostname:
-    :return:
+    :param current_user: the user
+    :param hostname: the hostname of the device
+    :return: a JSON response
     """
     if "admin" not in current_user["roles"]:
         return jsonify({"status": "Unauthorized"}), 403
@@ -91,10 +91,10 @@ def get_device_configuration(current_user, hostname):
 @app.route("/device/configs", methods=["GET"])
 @token_verification
 def get_all_device_configurations(current_user):
-    """
+    """Get all device configuration data.
 
-    :param current_user:
-    :return:
+    :param current_user: the user
+    :return: a JSON response
     """
     if "admin" not in current_user["roles"]:
         return jsonify({"status": "Unauthorized"}), 403
@@ -103,6 +103,26 @@ def get_all_device_configurations(current_user):
         return jsonify({"status": "success", "configurations": device_configurations}), 200
     else:
         return jsonify({"status": "error", "message": "Device configurations not found"}), 404
+
+
+@app.route("/users/data", methods=["GET"])
+@token_verification
+def get_all_user_info(current_user):
+    """Get all user info data.
+
+    :param current_user: the user
+    :return: a JSON response
+    """
+    if "admin" not in current_user["roles"]:
+        return jsonify({"status": "Unauthorized"}), 403
+
+    if users:
+        sanitized_users = {
+            user: {key: value for key, value in info.items() if key != "password"} for user, info in users.items()
+        }
+        return jsonify({"status": "success", "users": sanitized_users}), 200
+    else:
+        return jsonify({"status": "error", "message": "User info. not found"}), 404
 
 
 if __name__ == "__main__":

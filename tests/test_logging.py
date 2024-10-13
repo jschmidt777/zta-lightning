@@ -2,7 +2,7 @@
 
 import unittest
 from app.zta_checks.logging import LoggingCheck
-from app.domain_model import Device
+from app.domain_models import Device
 
 
 class TestLoggingCheck(unittest.TestCase):
@@ -59,8 +59,9 @@ class TestLoggingCheck(unittest.TestCase):
         self.devices = [self.router, self.host, self.log_server]
 
     def test_is_logging_enabled_router(self):
+        """Test that the router has logging enabled."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.is_logging_enabled(self.router.configuration))
+        self.assertTrue(checker._is_logging_enabled(self.router.configuration))
 
         modified_router_data = {
             **self.router_data,
@@ -69,15 +70,16 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.router_data["configuration"]["logging"],
                     "enabled": False,
-                }
-            }
+                },
+            },
         }
         modified_router = Device(modified_router_data)
-        self.assertFalse(checker.is_logging_enabled(modified_router.configuration))
+        self.assertFalse(checker._is_logging_enabled(modified_router.configuration))
 
     def test_is_logging_enabled_host(self):
+        """Test that the host has logging enabled."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.is_logging_enabled(self.host.configuration))
+        self.assertTrue(checker._is_logging_enabled(self.host.configuration))
 
         modified_host_data = {
             **self.host_data,
@@ -86,15 +88,16 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.host_data["configuration"]["logging"],
                     "enabled": False,
-                }
-            }
+                },
+            },
         }
         modified_host = Device(modified_host_data)
-        self.assertFalse(checker.is_logging_enabled(modified_host.configuration))
+        self.assertFalse(checker._is_logging_enabled(modified_host.configuration))
 
     def test_has_centralized_logging_server_router(self):
+        """Test that the router has a centralized logging server."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.has_centralized_logging_server(self.router.configuration))
+        self.assertTrue(checker._has_centralized_logging_server(self.router.configuration))
 
         modified_router_data = {
             **self.router_data,
@@ -103,15 +106,16 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.router_data["configuration"]["logging"],
                     "log_server": "",
-                }
-            }
+                },
+            },
         }
         modified_router = Device(modified_router_data)
-        self.assertFalse(checker.has_centralized_logging_server(modified_router.configuration))
+        self.assertFalse(checker._has_centralized_logging_server(modified_router.configuration))
 
     def test_has_centralized_logging_server_host(self):
+        """Test that the host has a centralized logging server."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.has_centralized_logging_server(self.host.configuration))
+        self.assertTrue(checker._has_centralized_logging_server(self.host.configuration))
 
         modified_host_data = {
             **self.host_data,
@@ -120,15 +124,16 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.host_data["configuration"]["logging"],
                     "log_server": "",
-                }
-            }
+                },
+            },
         }
         modified_host = Device(modified_host_data)
-        self.assertFalse(checker.has_centralized_logging_server(modified_host.configuration))
+        self.assertFalse(checker._has_centralized_logging_server(modified_host.configuration))
 
     def test_has_required_logging_levels_router(self):
+        """Test that the router has the required logging level."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.has_required_logging_levels(self.router.configuration, "router"))
+        self.assertTrue(checker._has_required_logging_levels(self.router.configuration, "router"))
 
         modified_router_data = {
             **self.router_data,
@@ -137,15 +142,16 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.router_data["configuration"]["logging"],
                     "log_events": ["INFO", "WARNING"],
-                }
-            }
+                },
+            },
         }
         modified_router = Device(modified_router_data)
-        self.assertFalse(checker.has_required_logging_levels(modified_router.configuration, "router"))
+        self.assertFalse(checker._has_required_logging_levels(modified_router.configuration, "router"))
 
     def test_has_required_logging_levels_host(self):
+        """Test that the host has the required logging level."""
         checker = LoggingCheck(self.devices)
-        self.assertTrue(checker.has_required_logging_levels(self.host.configuration, "host"))
+        self.assertTrue(checker._has_required_logging_levels(self.host.configuration, "host"))
 
         modified_host_data = {
             **self.host_data,
@@ -154,13 +160,14 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.host_data["configuration"]["logging"],
                     "log_events": ["INFO"],
-                }
-            }
+                },
+            },
         }
         modified_host = Device(modified_host_data)
-        self.assertFalse(checker.has_required_logging_levels(modified_host.configuration, "host"))
+        self.assertFalse(checker._has_required_logging_levels(modified_host.configuration, "host"))
 
     def test_run_logging_checks(self):
+        """Test the overall compliance check process."""
         checker = LoggingCheck(self.devices)
         results = checker.run_logging_checks()
 
@@ -183,8 +190,8 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.host_data["configuration"]["logging"],
                     "log_server": "",
-                }
-            }
+                },
+            },
         }
         modified_router_data = {
             **self.router_data,
@@ -193,8 +200,8 @@ class TestLoggingCheck(unittest.TestCase):
                 "logging": {
                     **self.router_data["configuration"]["logging"],
                     "log_events": ["INFO", "WARNING"],
-                }
-            }
+                },
+            },
         }
 
         modified_host = Device(modified_host_data)

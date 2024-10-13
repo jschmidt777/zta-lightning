@@ -8,6 +8,9 @@ from app.exceptions import (
     InvalidHostnameError,
     InvalidIpAddressError,
     InvalidConfigurationError,
+    InvalidUserDevicesError,
+    InvalidUserRolesError,
+    InvalidUsernameError,
 )
 
 JSON = dict[str, Any] | None
@@ -64,4 +67,44 @@ class Device:
 
     def __str__(self):
         """Return the string representation of the Device."""
-        return f"Device(Hostname: {self.hostname}, IP Address: {self.ip_address}, Type: {self.device_type})"
+        return f"Device(Hostname: {self._hostname}, IP Address: {self._ip_address}, Type: {self._device_type})"
+
+
+class User:
+    """A user on the network."""
+
+    def __init__(self, user: JSON):
+        username = user.get("username")
+        devices = user.get("devices")
+        roles = user.get("roles")
+
+        if len(username) > 50:
+            raise InvalidUsernameError(username)
+        self._username = username
+
+        if len(devices) == 0 or not isinstance(devices, list):
+            raise InvalidUserDevicesError(devices)
+        self._devices = devices
+
+        if len(roles) == 0 or not isinstance(roles, list):
+            raise InvalidUserRolesError(devices)
+        self._roles = roles
+
+    @property
+    def username(self) -> str:
+        """Return the username."""
+        return self._username
+
+    @property
+    def devices(self) -> list:
+        """Return the user devices."""
+        return self._devices
+
+    @property
+    def roles(self) -> list:
+        """Return the user roles."""
+        return self._roles
+
+    def __str__(self):
+        """Return the string representation of the User."""
+        return f"User(Username: {self._username}, Roles: {self._roles})"
