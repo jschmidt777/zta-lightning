@@ -1,47 +1,55 @@
-"""Creates report results."""
+"""Creates audit report results."""
 
-from datetime import datetime
+from typing import Literal
 
 import xlsxwriter
+from datetime import datetime
 
 
 class AuditReporter:
     """Context manager to handle creation of an audit report."""
 
+    VALID_ZTA_CHECKS = {"Logging", "Auth and AC", "Network Segmentation", "Least Privilege"}
+    ZtaCheckType = Literal["Logging", "Auth and AC", "Network Segmentation", "Least Privilege"]
+
     def __init__(self):
         """Initialize the audit report."""
-
         current_date = datetime.now().strftime("%Y-%m-%d")
         self.filepath = f"zta_compliance_audit_report_{current_date}.xlsx"
         self.workbook = xlsxwriter.Workbook(self.filepath)
         self.worksheet = self.workbook.add_worksheet()
-        self.row = 0
+        self.row = 1
+        self.device_rows = {}
+        self.col_headers = {}
 
     def __enter__(self):
         """Start the audit report."""
-        self.worksheet.write(self.row, 0, "Device")
-        self.worksheet.write(self.row, 1, "ZTA Check")
-        self.worksheet.write(self.row, 2, "Compliance Status")
-        self.worksheet.write(self.row, 3, "Details")
-        self.row += 1
-
+        self.worksheet.write(0, 0, "Device")
         return self
 
-    # todo: add more columns for different zta checks, their status, and details
-    def add_result(self, device, zta_check, status, details) -> None:
-        """Add a result to the audit report
+    def add_result(self, device, zta_check: ZtaCheckType, status, details) -> None:
+        """Add or update a result in the audit report for a given device."""
 
-        :param device: a device name
-        :param zta_check: the zta check type
-        :param status: the compliance status of the check
-        :param details: details about the check
-        :return: None
-        """
-        self.worksheet.write(self.row, 0, device)
-        self.worksheet.write(self.row, 1, zta_check)
-        self.worksheet.write(self.row, 2, status)
-        self.worksheet.write(self.row, 3, details)
-        self.row += 1
+        if zta_check not in self.VALID_ZTA_CHECKS:
+            raise ValueError(f"Invalid ZTA Check: '{zta_check}'. Must be one of {self.VALID_ZTA_CHECKS}.")
+
+        if device not in self.device_rows:
+            self.device_rows[device] = self.row
+            self.worksheet.write(self.row, 0, device)
+            self.row += 1
+
+        device_row = self.device_rows[device]
+
+        if zta_check not in self.col_headers:
+            col = len(self.col_headers) * 3 + 1
+            self.col_headers[zta_check] = col
+            self.worksheet.write(0, col, f"{zta_check} - Status")
+            self.worksheet.write(0, col + 1, f"{zta_check} - Details")
+
+        col = self.col_headers[zta_check]
+
+        self.worksheet.write(device_row, col, status)
+        self.worksheet.write(device_row, col + 1, details)
 
     def __exit__(self, exc_type, exc_value, traceback):
         """Create the audit report."""

@@ -1,19 +1,7 @@
 """Check for continuous logging and monitoring."""
 
-from dataclasses import dataclass
-
+from app.audit_reporter import AuditReporter
 from app.domain_models import Device
-
-
-@dataclass
-class LoggingCheckResult:
-    """Logging check result."""
-
-    hostname: str
-    compliant: bool
-    logging_enabled: bool
-    centralized_logging_server: bool
-    required_logging_level: bool
 
 
 class LoggingCheck:
@@ -85,25 +73,26 @@ class LoggingCheck:
             if "AAA" in device.configuration.get("services", []):
                 return device.ip_address
 
-    # todo: explain what it should be if it's not compliant
-    def run_logging_checks(self) -> list[LoggingCheckResult]:
-        """Run all logging checks for each device and return the results.
+    def run_logging_checks(self, audit_reporter: AuditReporter) -> None:
+        """Run all Logging checks for each device and report on results.
 
-        :return: a list of logging check results
+        :param audit_reporter: the audit reporter.
+        :return: None
         """
-        results = []
+
         for device in self._devices:
             device_config = device.configuration
             is_logging_enabled = self._is_logging_enabled(device_config)
             has_centralized_logging_server = self._has_centralized_logging_server(device_config)
             has_required_logging_levels = self._has_required_logging_levels(device_config, device.device_type)
             compliant = all((is_logging_enabled, has_centralized_logging_server, has_required_logging_levels))
-            device_result = LoggingCheckResult(
+
+            audit_reporter.add_result(
                 device.hostname,
+                "Logging",
                 compliant,
-                logging_enabled=is_logging_enabled,
-                centralized_logging_server=has_centralized_logging_server,
-                required_logging_level=has_required_logging_levels,
+                f"Device has logging enabled: {is_logging_enabled}. \n"
+                f"Device has expected centralized logging server ({self._log_server}): {has_centralized_logging_server}. \n"
+                f"Device has required logging level (hosts: INFO, WARNING | all others: INFO, WARNING, ERROR, FATAL): "
+                f"{has_required_logging_levels}.",
             )
-            results.append(device_result)
-        return results

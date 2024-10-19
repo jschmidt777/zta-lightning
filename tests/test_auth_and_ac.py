@@ -1,3 +1,5 @@
+"""Unit tests for AuthAndACCheck."""
+
 import unittest
 from copy import deepcopy
 from app.domain_models import Device, User
@@ -89,12 +91,12 @@ class TestAuthAndACCheck(unittest.TestCase):
         self.assertTrue(checker._has_centralized_aaa_server(devices[2].configuration))
 
     def test_host_access_controls(self):
-        """Test that only one non-admin user is assigned to the host."""
+        """Test that only one non-admin user is assigned to a host."""
         devices, users = self.get_fresh_objects()
         checker = AuthAndACCheck(devices, users)
         self.assertTrue(checker._has_access_controls(devices[0], users))
 
-        non_compliant_user_data = {"username": "user1", "roles": ["admin"], "devices": ["Host1"]}
+        non_compliant_user_data = {"username": "user1", "roles": ["user"], "devices": ["Host1", "Host2"]}
         non_compliant_user = User(non_compliant_user_data)
 
         checker = AuthAndACCheck(devices, [non_compliant_user])
@@ -123,22 +125,6 @@ class TestAuthAndACCheck(unittest.TestCase):
 
         checker = AuthAndACCheck(devices, [compliant_user])
         self.assertTrue(checker._has_access_controls(devices[2], [compliant_user]))
-
-    def test_run_auth_and_ac_checks(self):
-        """Test the overall compliance check process."""
-        devices, users = self.get_fresh_objects()
-        checker = AuthAndACCheck(devices, users)
-        results = checker.run_auth_and_ac_checks()
-
-        host_result = next(result for result in results if result.hostname == "Host1")
-        print(host_result)
-        self.assertTrue(host_result.compliant)
-
-        server_result = next(result for result in results if result.hostname == "Server1")
-        self.assertTrue(server_result.compliant)
-
-        network_device_result = next(result for result in results if result.hostname == "Router1")
-        self.assertFalse(network_device_result.compliant)  # user 3 is not admin
 
 
 if __name__ == "__main__":

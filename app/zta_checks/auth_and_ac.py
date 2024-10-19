@@ -1,18 +1,7 @@
 """Check for authentication and access controls."""
 
-from dataclasses import dataclass
+from app.audit_reporter import AuditReporter
 from app.domain_models import Device, User
-
-
-@dataclass
-class AuthAndACCheckResult:
-    """Authentication and Access control check result."""
-
-    hostname: str
-    compliant: bool
-    auth_enabled: bool
-    centralized_aaa_server: bool
-    access_controls: bool
 
 
 class AuthAndACCheck:
@@ -29,7 +18,7 @@ class AuthAndACCheck:
             "auth":{
                 "enabled": True,
                 "aaa_server": "192.168.1.100",
-                "acl"(OPTIONAL): {Allow: Host3, Deny: Host4},
+                "acl"(OPTIONAL): {Allow: [Host3], Deny: [Host4]},
                 "assigned_user"(OPTIONAL): "user1"
             }
         """
@@ -87,9 +76,13 @@ class AuthAndACCheck:
                 return device.ip_address
         return ""
 
-    def run_auth_and_ac_checks(self) -> list[AuthAndACCheckResult]:
-        """Run all Authentication and Access control checks for each device."""
-        results = []
+    def run_auth_and_ac_checks(self, audit_reporter: AuditReporter) -> None:
+        """Run all Authentication and Access control checks for each device and report on results.
+
+        :param audit_reporter: the audit reporter.
+        :return: None
+        """
+
         for device in self._devices:
             device_config = device.configuration
             is_auth_enabled = self._is_auth_enabled(device_config)
@@ -97,13 +90,12 @@ class AuthAndACCheck:
             has_access_controls = self._has_access_controls(device, self._user_data)
             compliant = all((is_auth_enabled, has_centralized_aaa_server, has_access_controls))
 
-            results.append(
-                AuthAndACCheckResult(
-                    hostname=device.hostname,
-                    compliant=compliant,
-                    auth_enabled=is_auth_enabled,
-                    centralized_aaa_server=has_centralized_aaa_server,
-                    access_controls=has_access_controls,
-                )
+            audit_reporter.add_result(
+                device.hostname,
+                "Auth and AC",
+                compliant,
+                f"Device has auth enabled: {is_auth_enabled}. \n"
+                f"Device has expected centralized AAA server ({self._aaa_server}): {has_centralized_aaa_server}. \n"
+                f"Device has required access controls (One user per host | server w/ ACL | network devices admin only): "
+                f"{has_access_controls}",
             )
-        return results

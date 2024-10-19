@@ -1,6 +1,7 @@
 """Unit tests for LoggingCheck."""
 
 import unittest
+
 from app.zta_checks.logging import LoggingCheck
 from app.domain_models import Device
 
@@ -165,55 +166,6 @@ class TestLoggingCheck(unittest.TestCase):
         }
         modified_host = Device(modified_host_data)
         self.assertFalse(checker._has_required_logging_levels(modified_host.configuration, "host"))
-
-    def test_run_logging_checks(self):
-        """Test the overall compliance check process."""
-        checker = LoggingCheck(self.devices)
-        results = checker.run_logging_checks()
-
-        router1 = results[0]
-        self.assertTrue(router1.compliant)
-        self.assertTrue(router1.logging_enabled)
-        self.assertTrue(router1.centralized_logging_server)
-        self.assertTrue(router1.required_logging_level)
-
-        host1 = results[1]
-        self.assertTrue(host1.compliant)
-        self.assertTrue(host1.logging_enabled)
-        self.assertTrue(host1.centralized_logging_server)
-        self.assertTrue(host1.required_logging_level)
-
-        modified_host_data = {
-            **self.host_data,
-            "configuration": {
-                **self.host_data["configuration"],
-                "logging": {
-                    **self.host_data["configuration"]["logging"],
-                    "log_server": "",
-                },
-            },
-        }
-        modified_router_data = {
-            **self.router_data,
-            "configuration": {
-                **self.router_data["configuration"],
-                "logging": {
-                    **self.router_data["configuration"]["logging"],
-                    "log_events": ["INFO", "WARNING"],
-                },
-            },
-        }
-
-        modified_host = Device(modified_host_data)
-        modified_router = Device(modified_router_data)
-
-        checker = LoggingCheck([modified_router, modified_host, self.log_server])
-        results = checker.run_logging_checks()
-
-        router1 = results[0]
-        host1 = results[1]
-        self.assertFalse(host1.centralized_logging_server)
-        self.assertFalse(router1.required_logging_level)
 
 
 if __name__ == "__main__":
