@@ -44,6 +44,8 @@ Ensure to provide an `.env` file with the following configuration options set be
 - JWT_SECRET_KEY (string: used for the simulated appliance to create JWTs)
 - VERIFY_SSL (boolean: tells the tool to verify SSL for HTTPS 2.0; not required with running against the simulated appliance)
 - USE_HTTPS (boolean: enables HTTPS on the simulated appliance)
+- USERS_FILE (json file: provides users for running the simulated appliance)
+- DEVICES_FILE (json file: provides device configurations for running the simulated appliance)
 
 1. Ensure that your network appliance has both HTTPS and JWT authentication enabled.
 
