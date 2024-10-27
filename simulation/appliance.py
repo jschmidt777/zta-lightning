@@ -14,13 +14,11 @@ app = Flask(__name__)
 load_dotenv()
 
 # load configuration for the appliance
+SIMULATION_DIR = os.path.dirname(os.path.abspath(__file__))
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "default_secret_key")
 USE_HTTPS = os.getenv("USE_HTTPS", "False").lower() == "true"
-SIMULATION_DIR = os.path.dirname(os.path.abspath(__file__))
-USERS_FILE = os.path.join(SIMULATION_DIR, "users.json")
-# todo: make this configurable to point to two other configs
-# there will be three total: compliant, non-compliant, and partial compliant
-DEVICES_FILE = os.path.join(SIMULATION_DIR, "configurations.json")
+USERS_FILE = os.path.join(SIMULATION_DIR, os.getenv("USERS_FILE", "partial_compliant_users.json"))
+DEVICES_FILE = os.path.join(SIMULATION_DIR, os.getenv("DEVICES_FILE", "partial_compliant_configurations.json"))
 
 if os.path.exists(USERS_FILE):
     with open(USERS_FILE, "r") as f:

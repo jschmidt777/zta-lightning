@@ -27,15 +27,28 @@ class AuthAndACCheck:
         self._aaa_server = self._get_aaa_server_ip()
 
     def _is_auth_enabled(self, device_config: dict) -> bool:
-        """Check if authentication is enabled on the device."""
+        """Check if authentication is enabled on the device.
+
+        :param device_config: the device configuration
+        :return: boolean indicating if auth is enabled
+        """
         return device_config.get("auth", {}).get("enabled", False)
 
     def _has_centralized_aaa_server(self, device_config: dict) -> bool:
-        """Check if the device points to the centralized AAA server."""
+        """Check if the device points to the centralized AAA server.
+
+        :param device_config: the device configuration
+        :return: boolean indicating if the device has the correct centralized AAA server
+        """
         return device_config.get("auth", {}).get("aaa_server") == self._aaa_server
 
     def _has_access_controls(self, device: Device, users: list[User]) -> bool:
-        """Check if the device has appropriate access controls."""
+        """Check if the device has appropriate access controls.
+
+        :param device: the device
+        :param users: the users
+        :return: boolean indicating if the devices has appropriate access controls
+        """
         device_type = device.device_type
         device_config = device.configuration
 
@@ -79,7 +92,7 @@ class AuthAndACCheck:
     def run_auth_and_ac_checks(self, audit_reporter: AuditReporter) -> None:
         """Run all Authentication and Access control checks for each device and report on results.
 
-        :param audit_reporter: the audit reporter.
+        :param audit_reporter: the audit reporter
         :return: None
         """
 

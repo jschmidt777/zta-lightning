@@ -34,7 +34,6 @@ class APIClient:
         :return: a JavaScript Web Token (str)
         """
 
-        # todo: may need to think about this a bit more for security
         base_url = input("Enter the AAA/NMS appliance url:") or "https://localhost:443"
         username = input("Enter your username: ")
         password = getpass.getpass("Enter your password: ")

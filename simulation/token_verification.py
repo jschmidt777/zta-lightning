@@ -8,7 +8,7 @@ from flask.cli import load_dotenv
 
 SIMULATION_DIR = os.path.dirname(os.path.abspath(__file__))
 
-USERS_FILE = os.path.join(SIMULATION_DIR, "users.json")
+USERS_FILE = os.path.join(SIMULATION_DIR, "partial_compliant_users.json")
 
 if os.path.exists(USERS_FILE):
     with open(USERS_FILE, "r") as f:

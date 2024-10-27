@@ -25,10 +25,9 @@
                 }
             },
             "routing_protocol": "OSPF",
-            "ACL": {
-                "name": "BLOCK_SSH",
-                "rules": ["deny tcp any any eq 22"]
-            },
+            "roles": [
+                "admin"
+            ],
             "logging": {
                 "enabled": true,
                 "log_server": "192.168.1.254",
@@ -39,6 +38,9 @@
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "acl": {"allow":["joe"]}
+            },
+            "network_segmentation": {
+                "allowed_segments": ["192.168.1.0/24", "10.0.0.0/24"]
             }
         }
     },
@@ -73,6 +75,9 @@
                 "10": "Management",
                 "20": "Engineering"
             },
+            "roles": [
+                "admin"
+            ],
             "logging": {
                 "enabled": true,
                 "log_server": "192.168.1.254",
@@ -83,6 +88,9 @@
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "acl": {"allow":["joe"]}
+            },
+            "network_segmentation": {
+                "allowed_segments": ["10", "20"]
             }
         }
     },
@@ -101,30 +109,28 @@
             },
             "policies": {
                 "allow_ssh": {
-                    "source": "192.168.1.0/24",
+                    "source": "192.168.1.104",
                     "destination": "any",
                     "port": "22",
                     "action": "allow"
-                },
-                "block_http": {
-                    "source": "any",
-                    "destination": "any",
-                    "port": "80",
-                    "action": "block"
                 }
             },
+            "roles": [
+                "admin"
+            ],
             "logging": {
-                "enabled": false,
-                "log_level": "N/A",
-                "log_server": "N/A",
-                "log_events": [
-                ],
+                "enabled": true,
+                "log_server": "192.168.1.254",
+                "log_events": [ "INFO", "WARNING", "ERROR", "FATAL"],
                 "retention_period": 0
             },
             "auth":{
-                "enabled": false,
-                "aaa_server": "",
+                "enabled": true,
+                "aaa_server": "192.168.1.254",
                 "acl": {"allow":["joe"]}
+            },
+            "network_segmentation": {
+                "allowed_segments": ["192.168.1.0/24", "10.0.0.0/24"]
             }
         }
     },
@@ -139,6 +145,9 @@
             },
             "operating_system": "Windows 10",
             "status": "up",
+            "roles": [
+                "user"
+            ],
             "logging": {
                 "enabled": true,
                 "log_server": "192.168.1.254",
@@ -147,11 +156,14 @@
                     "WARNING"
                 ]
             },
-            "auth":{
+            "auth": {
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "assigned_user": "alice"
-            }
+            },
+            "allowed_segments": [
+                "10"
+            ]
         }
     },
     "Host2": {
@@ -165,6 +177,9 @@
             },
             "operating_system": "Ubuntu 20.04",
             "status": "up",
+            "roles": [
+                "user"
+            ],
             "logging": {
                 "enabled": true,
                 "log_server": "192.168.1.254",
@@ -177,7 +192,10 @@
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "assigned_user": "bob"
-            }
+            },
+            "allowed_segments": [
+                "20"
+            ]
         }
     },
     "FileServer": {
@@ -194,6 +212,9 @@
             "services": [
                 "File Sharing",
                 "FTP"
+            ],
+            "roles": [
+                "user","admin"
             ],
             "logging": {
                 "enabled": true,
@@ -238,7 +259,10 @@
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "assigned_user": "joe"
-            }
+            },
+            "allowed_segments": [
+                "10", "20"
+            ]
         }
     },
     "ApplianceServer": {
@@ -256,19 +280,27 @@
                 "NMS",
                 "AAA"
             ],
+            "roles": [
+                "admin"
+            ],
             "logging": {
                 "enabled": true,
                 "log_server": "192.168.1.254",
                 "log_events": [
                     "INFO",
-                    "WARNING"
+                    "WARNING",
+                    "ERROR",
+                    "FATAL"
                 ]
             },
             "auth":{
                 "enabled": true,
                 "aaa_server": "192.168.1.254",
                 "acl": {"allow": ["joe"]}
-            }
+            },
+            "allowed_segments": [
+                "192.168.1.0/24", "10.0.0.0/24"
+            ]
         }
     }
 }
