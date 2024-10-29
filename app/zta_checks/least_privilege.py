@@ -1,10 +1,12 @@
 """Check for least privilege."""
+
 from app.audit_reporter import AuditReporter
 from app.domain_models import Device, User
 
 
 class LeastPrivilegeCheck:
     """Least privilege check."""
+
     def __init__(self, devices: list[Device], user_data: list[User]):
         """
         Initialize with a list of Device objects and User data.
@@ -24,30 +26,24 @@ class LeastPrivilegeCheck:
 
         for device in self._devices:
             compliant = []
-            for user in self._user_data:
-                user_roles = user.roles
-                if device.device_type == "host":
-                    if user.username == device.configuration.get("allowed_user"):
-                        compliant.append(True)
-                    else:
-                        compliant.append(False)
-                else:
-                    if user.username in device.configuration.get("auth", {}).get("acl", {}).get("allow", []):
-                        compliant.append(True)
-                    else:
-                        compliant.append(False)
-
+            if device.device_type == "host":
+                assigned_user = device.configuration.get("auth", {}).get("assigned_user", "")
                 allowed_roles = device.configuration.get("roles", [])
-                if any(role in user_roles for role in allowed_roles):
+                valid_user = next(u for u in self._user_data if u.username == assigned_user)
+                if assigned_user == valid_user.username and any(role in valid_user.roles for role in allowed_roles):
                     compliant.append(True)
                 else:
                     compliant.append(False)
+            else:
+                acl = device.configuration.get("auth", {}).get("acl", {}).get("allow", [])
+                valid_users = [user.username for user in self._user_data]
+                for user in acl:
+                    if user in valid_users:
+                        compliant.append(True)
+                    else:
+                        compliant.append(False)
 
             compliant = all(compliant)
             audit_reporter.add_result(
-                device.hostname,
-                "Least Privilege",
-                compliant,
-                f"Device has proper permissions for users: {compliant}."
+                device.hostname, "Least Privilege", compliant, f"Device has proper permissions for users: {compliant}."
             )
-

@@ -47,7 +47,7 @@ class NetworkSegmentationCheck:
                 except ValueError:
                     continue
         except ValueError:
-            # when not an IP, treat it as a VLAN ID or Name
+            # when not an IP, treat it as a VLAN ID or VLAN Name
             return segment in allowed_segments
         return False
 
