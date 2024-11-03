@@ -66,7 +66,7 @@ class APIClient:
                 response = requests.get(protected_url, headers=headers, verify=VERIFY_SSL)
                 response.raise_for_status()
                 config = response.json().get("configuration")
-                print(f"Successfully accessed {device} configuration.")
+                print(f"Successfully tested connection. Accessed {device} configuration.")
                 return config
             except requests.exceptions.HTTPError as err:
                 print(f"Failed to access test connection config: {device} Error was: {err}")

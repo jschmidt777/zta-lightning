@@ -9,7 +9,7 @@ The tool outputs a detailed Excel report of the compliance audit results.
   - In the current version, these include:
     - Logging and Monitoring
     - Authentication and Access Control
-    - Network Segementation
+    - Network Segmentation
     - Least Privilege
 - **Excel Report Generation**: Provides a summary of the compliance results in an Excel file.
 - **Network Appliance Integration**: Works with network appliances that have AAA and NMS functionalities.
@@ -46,6 +46,21 @@ Ensure to provide an `.env` file with the following configuration options set be
 - USE_HTTPS (boolean: enables HTTPS on the simulated appliance)
 - USERS_FILE (json file: provides users for running the simulated appliance)
 - DEVICES_FILE (json file: provides device configurations for running the simulated appliance)
+
+If you're running the tool against an appliance and want to use a version of HTTPS, ensure that certs are available. This 
+can be done in the simulated appliance as well with dummy certs:
+
+Create key: 
+```openssl genrsa -out appliance.key 2048```
+
+Create csr for self signed cert: ```openssl req -new -key appliance.key -out appliance.csr```
+	
+- Careful setting dummy values with this command
+
+Create self signed cert: ```openssl x509 -req -days 365 -in appliance.csr -signkey appliance.key -out appliance.crt```
+
+
+Follow these steps to run the tool:
 
 1. Ensure that your network appliance has both HTTPS and JWT authentication enabled.
 

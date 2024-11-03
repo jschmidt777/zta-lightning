@@ -1,3 +1,4 @@
+"""Simulated appliance for testing ZTA lightning."""
 import json
 import os
 

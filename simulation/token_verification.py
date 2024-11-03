@@ -1,3 +1,4 @@
+"""Decorator for checking JWT token."""
 import json
 import os
 from functools import wraps

@@ -15,7 +15,7 @@ class InvalidDeviceTypeError(InvalidDeviceValueError):
 
 
 class InvalidHostnameError(InvalidDeviceValueError):
-    """Invlaid hostname."""
+    """Invalid hostname."""
 
     pass
 
