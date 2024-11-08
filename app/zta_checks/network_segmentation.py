@@ -112,5 +112,5 @@ class NetworkSegmentationCheck:
                 compliant,
                 f"Device has proper network segmentation "
                 f"(network device | proper VLANs/Subnets, "
-                f"host and servers | proper VLAN and connected device): {compliant}.",
+                f"host and servers | proper VLANs/Subnets and connected device): {compliant}.",
             )
